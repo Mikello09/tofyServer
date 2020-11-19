@@ -8,6 +8,7 @@ const proxy = require('../Helper/proxy');
 const mongo = require('mongodb').MongoClient;
 const mongoose = require('mongoose');
 const { MongoNetworkError } = require('mongodb');
+const randomToken = require('random-token');
 
 api.use(bodyParser.urlencoded({extended: false}))//necesario para parsear las respuestas en el body
 
@@ -57,7 +58,7 @@ api.post('/registro', (req,res) => {
                 const nuevoUsuario = new Usuario({ 
                     email: email,
                     pass: pass,
-                    token: "hay que generar un token unico"
+                    token: randomToken(16)
                 });
                 nuevoUsuario.save().then(usuario => {
                     res.status(200).json({usuario});
