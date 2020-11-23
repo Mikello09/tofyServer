@@ -14,11 +14,13 @@ const usuarioSchema = new mongoose.Schema({
 
 const clavesSchema = new mongoose.Schema({
     tokenUsuario: String,
+    token: String,
     titulo: String,
     usuario: String,
     contrasena: String,
-    valor: String
+    valor: String,
+    fehca: String
 });
 
 
-module.exports = {usuarioSchema, uri}
+module.exports = {usuarioSchema,clavesSchema, uri}
