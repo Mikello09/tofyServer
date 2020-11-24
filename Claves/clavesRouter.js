@@ -51,7 +51,7 @@ api.post('/guardarClave', (req,res) => {
     var fecha = req.body.fecha;
 
     if(proxy.isUserAuthenticated(req.headers['authtoken'])){
-        if (proxy.allValuesNeeded([usuarioToken, token, titulo, valor, usuario, contrasena, fecha])){
+        if (proxy.allValuesNeeded([usuarioToken, token, titulo, fecha])){
             mongoose.connect(databaseConfig.uri, {useNewUrlParser: true, useUnifiedTopology: true})
             .then(() => {
                 const Clave = mongoose.model('Clave', databaseConfig.clavesSchema);
