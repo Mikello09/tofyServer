@@ -19,7 +19,7 @@ const clavesSchema = new mongoose.Schema({
     usuario: String,
     contrasena: String,
     valor: String,
-    fehca: String
+    fecha: String
 });
 
 
