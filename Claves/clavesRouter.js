@@ -20,7 +20,7 @@ api.post('/getAllClaves', (req,res) => {
             .then(() => {
                 const Clave = mongoose.model('Clave', databaseConfig.clavesSchema);
                 Clave.find({
-                    usuarioToken: usuarioToken
+                    tokenUsuario: usuarioToken
                 })
                 .then(claves => {
                     res.status(200).json(claves);
