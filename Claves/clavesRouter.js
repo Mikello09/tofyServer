@@ -71,7 +71,7 @@ api.post('/guardarClave', (req,res) => {
                         })
                     } else {
                         const nuevaClave = new Clave({ 
-                            tokenUsuario: tokenUsuario,
+                            tokenUsuario: usuarioToken,
                             token: token,
                             titulo: titulo,
                             valor: valor,
