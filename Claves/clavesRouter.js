@@ -23,7 +23,7 @@ api.post('/getAllClaves', (req,res) => {
                     tokenUsuario: usuarioToken
                 })
                 .then(claves => {
-                    res.status(200).json(claves);
+                    res.status(200).json({claves});
                 })
                 .catch(err => {
                     res.status(500).json({"reason":"Error en la obtencion de los datos"});
