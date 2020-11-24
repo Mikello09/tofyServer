@@ -41,49 +41,7 @@ api.post('/getAllClaves', (req,res) => {
 	}
 });
 
-api.post('/saveClave', (req,res) => {
-    var usuarioToken = req.body.usuarioToken;
-    var token = req.body.token;
-    var titulo = req.body.titulo;
-    var valor = req.body.valor;
-    var usuario = req.body.usuario;
-    var contrasena = req.body.contrasena;
-    var fecha = req.body.fecha;
-
-    if(proxy.isUserAuthenticated(req.headers['authtoken'])){
-        if (proxy.allValuesNeeded([usuarioToken, token, titulo, valor, usuario, contrasena, fecha])){
-            mongoose.connect(databaseConfig.uri, {useNewUrlParser: true, useUnifiedTopology: true})
-            .then(() => {
-                const Clave = mongoose.model('Clave', databaseConfig.clavesSchema);
-                const nuevaClave = new Clave({ 
-                    tokenUsuario: tokenUsuario,
-                    token: token,
-                    titulo: titulo,
-                    valor: valor,
-                    usuario: usuario,
-                    contrasena: contrasena,
-                    fecha: fecha
-                });
-                nuevaClave.save().then(clave => {
-                    res.status(200).json({clave});
-                })
-                .catch(err => {
-                    res.status(500).json({"reason":"Error interno, vuelva a intentarlo"});
-                });
-
-            })
-            .catch(err => {
-                res.status(500).json({"reason":"Error en la conexión a la base de datos"});
-            })
-        } else {
-            res.status(400).json({"reason":"Faltan valores en la llamada"});
-        }
-    } else {
-        res.status(401).json({"reason":"Unauthorized"});
-    }
-});
-
-api.post('/updateClave', (req,res) => {
+api.post('/guardarClave', (req,res) => {
     var usuarioToken = req.body.usuarioToken;
     var token = req.body.token;
     var titulo = req.body.titulo;
@@ -112,7 +70,21 @@ api.post('/updateClave', (req,res) => {
                             res.status(500).json({"reason":"Error interno, vuelva a intentarlo"});
                         })
                     } else {
-                        res.status(400).json({"reason":"No existe ficha asociada a este número de orden"});
+                        const nuevaClave = new Clave({ 
+                            tokenUsuario: tokenUsuario,
+                            token: token,
+                            titulo: titulo,
+                            valor: valor,
+                            usuario: usuario,
+                            contrasena: contrasena,
+                            fecha: fecha
+                        });
+                        nuevaClave.save().then(clave => {
+                            res.status(200).json({clave});
+                        })
+                        .catch(err => {
+                            res.status(500).json({"reason":"Error interno, vuelva a intentarlo"});
+                        });
                     }
                 })
                 .catch(err => {
