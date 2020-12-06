@@ -16,21 +16,15 @@ api.post('/getAllClaves', (req,res) => {
 	var usuarioToken = req.body.token;
 	if(proxy.isUserAuthenticated(req.headers['authtoken'])){
         if (proxy.allValuesNeeded([usuarioToken])){
-            mongoose.connect(databaseConfig.uri, {useNewUrlParser: true, useUnifiedTopology: true})
-            .then(() => {
-                const Clave = mongoose.model('Clave', databaseConfig.clavesSchema);
-                Clave.find({
-                    tokenUsuario: usuarioToken
-                })
-                .then(claves => {
-                    res.status(200).json({claves});
-                })
-                .catch(err => {
-                    res.status(500).json({"reason":"Error en la obtencion de los datos"});
-                })
+            const Clave = mongoose.model('Clave', databaseConfig.clavesSchema);
+            Clave.find({
+                tokenUsuario: usuarioToken
+            })
+            .then(claves => {
+                res.status(200).json({claves});
             })
             .catch(err => {
-                res.status(500).json({"reason":"Error en la conexión a la base de datos"});
+                res.status(500).json({"reason":"Error en la obtencion de los datos"});
             })
         } else {
             res.status(400).json({"reason":"Faltan valores en la llamada"});
@@ -52,49 +46,42 @@ api.post('/guardarClave', (req,res) => {
 
     if(proxy.isUserAuthenticated(req.headers['authtoken'])){
         if (proxy.allValuesNeeded([usuarioToken, token, titulo, fecha])){
-            mongoose.connect(databaseConfig.uri, {useNewUrlParser: true, useUnifiedTopology: true})
-            .then(() => {
-                const Clave = mongoose.model('Clave', databaseConfig.clavesSchema);
-                Clave.findOne({
-                    token: token
-                }, function(err, clave){
-                    if(clave != null){
-                        clave.titulo = titulo
-                        clave.valor = valor
-                        clave.usuario = usuario
-                        clave.contrasena = contrasena
-                        clave.save().then(clave => {
-                            res.status(200).json({clave});
-                        })
-                        .catch(err => {
-                            res.status(500).json({"reason":"Error interno, vuelva a intentarlo"});
-                        })
-                    } else {
-                        const nuevaClave = new Clave({ 
-                            tokenUsuario: usuarioToken,
-                            token: token,
-                            titulo: titulo,
-                            valor: valor,
-                            usuario: usuario,
-                            contrasena: contrasena,
-                            fecha: fecha
-                        });
-                        nuevaClave.save().then(clave => {
-                            res.status(200).json({clave});
-                        })
-                        .catch(err => {
-                            res.status(500).json({"reason":"Error interno, vuelva a intentarlo"});
-                        });
-                    }
-                })
-                .catch(err => {
-                    res.status(500).json({"reason":"Error interno, vuelva a intentarlo"});
-                });
-
+            const Clave = mongoose.model('Clave', databaseConfig.clavesSchema);
+            Clave.findOne({
+                token: token
+            }, function(err, clave){
+                if(clave != null){
+                    clave.titulo = titulo
+                    clave.valor = valor
+                    clave.usuario = usuario
+                    clave.contrasena = contrasena
+                    clave.save().then(clave => {
+                        res.status(200).json({clave});
+                    })
+                    .catch(err => {
+                        res.status(500).json({"reason":"Error interno, vuelva a intentarlo"});
+                    })
+                } else {
+                    const nuevaClave = new Clave({ 
+                        tokenUsuario: usuarioToken,
+                        token: token,
+                        titulo: titulo,
+                        valor: valor,
+                        usuario: usuario,
+                        contrasena: contrasena,
+                        fecha: fecha
+                    });
+                    nuevaClave.save().then(clave => {
+                        res.status(200).json({clave});
+                    })
+                    .catch(err => {
+                        res.status(500).json({"reason":"Error interno, vuelva a intentarlo"});
+                    });
+                }
             })
             .catch(err => {
-                res.status(500).json({"reason":"Error en la conexión a la base de datos"});
-            })
+                res.status(500).json({"reason":"Error interno, vuelva a intentarlo"});
+            });
         } else {
             res.status(400).json({"reason":"Faltan valores en la llamada"});
         }
