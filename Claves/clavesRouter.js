@@ -35,6 +35,32 @@ api.post('/getAllClaves', (req,res) => {
 	}
 });
 
+api.post('/eliminarClave', (req,res) => {
+    var token = req.body.token;
+    if(proxy.isUserAuthenticated(req.headers['authtoken'])){
+        if (proxy.allValuesNeeded([token])){
+            const Clave = mongoose.model('Clave', databaseConfig.clavesSchema);
+            Clave.deleteOne({ 
+                token: token
+             }, function(err, clave){
+                if (clave != null){
+                    res.status(200).json({clave});
+                } else {
+                    res.status(500).json({"reason":"Error interno, vuelva a intentarlo"});
+                }
+             })
+             .catch (err => {
+                res.status(500).json({"reason":"Error interno, vuelva a intentarlo"});
+             });
+
+        } else {
+            res.status(400).json({"reason":"Faltan valores en la llamada"});
+        }
+    } else {
+        res.status(401).json({"reason":"Unauthorized"});
+    }
+});
+
 api.post('/guardarClave', (req,res) => {
     var usuarioToken = req.body.usuarioToken;
     var token = req.body.token;
