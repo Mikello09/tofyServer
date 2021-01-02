@@ -37,14 +37,16 @@ api.post('/getAllClaves', (req,res) => {
 
 api.post('/eliminarClave', (req,res) => {
     var token = req.body.token;
+    var tokenUsuario = req.body.tokenUsuario;
     if(proxy.isUserAuthenticated(req.headers['authtoken'])){
-        if (proxy.allValuesNeeded([token])){
+        if (proxy.allValuesNeeded([token, tokenUsuario])){
             const Clave = mongoose.model('Clave', databaseConfig.clavesSchema);
             Clave.deleteOne({ 
-                token: token
+                token: token,
+                tokenUsuario: tokenUsuario
              }, function(err, clave){
-                if (clave != null){
-                    res.status(200).json({clave});
+                if (clave.deletedCount == 1){
+                    res.status(200).json({"result":"OK"});
                 } else {
                     res.status(500).json({"reason":"Error interno, vuelva a intentarlo"});
                 }
