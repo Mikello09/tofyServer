@@ -107,7 +107,7 @@ api.post('/addCategoria', async(req,res) => {
         if (proxy.allValuesNeeded([titulo, imagen, tipo, grupo])){
             try{
                 const Categoria = mongoose.model('Categoria', databaseConfig.categoriaSchema);
-                const nuevaCategoria = new Grupo({
+                const nuevaCategoria = new Categoria({
                     token: randomToken(16),
                     grupo: grupo,
                     titulo: titulo,
@@ -144,7 +144,7 @@ api.post('/editarCategoria', async(req,res) => {
                 categoriaParaEditar.titulo = titulo;
                 categoriaParaEditar.imagen = imagen;
                 categoriaParaEditar.tipo = tipo;
-                
+
                 const categoria = await categoriaParaEditar.save()
                 res.status(200).json({categoria});
             } catch(err) {
