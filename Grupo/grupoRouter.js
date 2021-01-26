@@ -31,7 +31,6 @@ api.post('/crearGrupo', async(req,res) => {
                     nombre: nombre,
                     ahorro: ahorro
                 });
-                nuevoGrupo.miembros.push(usuarioToken);
                 const grupoCreado = await nuevoGrupo.save();
                 usuarioCreador.grupo = grupoToken;
                 const usuarioEditado = await usuarioCreador.save();
@@ -48,6 +47,7 @@ api.post('/crearGrupo', async(req,res) => {
 
                 res.status(200).json({grupo});
             } catch(err) {
+                console.log(err);
 				res.status(500).json({"reason":"Error interno, vuelva a intentarlo"});
 			};
         } else {
