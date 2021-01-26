@@ -59,6 +59,47 @@ api.post('/crearGrupo', async(req,res) => {
     }
 });
 
+api.post('/unirGrupo', async(req,res) => {
+    var grupoToken = req.body.grupoToken;
+    var usuarioToken = req.body.usuarioToken;
+
+    if(proxy.isUserAuthenticated(req.headers['authtoken'])){
+        if (proxy.allValuesNeeded([grupoToken, usuarioToken])){
+            try{
+                const Grupo = mongoose.model('Grupo', databaseConfig.grupoSchema);
+                const Usuario = mongoose.model('Usuario', databaseConfig.usuarioSchema);
+                const grupoParaAnadir = await Grupo.findOne({token: grupoToken});
+                
+                const usuarioParaUnir = await Usuario.findOne({token: usuarioToken})
+                usuarioParaUnir.grupo = grupoToken;
+                const usuarioUnido = await usuarioParaUnir.save();
+
+                const miembros = await Usuario.find({grupo: grupoUsuario.token});
+                const categorias = await Categoria.find({grupo: grupoUsuario.token});
+
+                var grupo = {
+                    "token": grupoParaAnadir.token,
+                    "nombre": grupoParaAnadir.nombre,
+                    "ahorro": grupoParaAnadir.ahorro,
+                    "miembros": miembros,
+                    "categorias": categorias
+                }
+
+
+                res.status(200).json({grupo});
+                
+            } catch(err) {
+				res.status(400).json({"reason":"Este ID no corresponde a ningún grupo"});
+			};
+        } else {
+            res.status(400).json({"reason":"Faltan valores en la llamada"});
+        }
+
+    } else {
+        res.status(401).json({"reason":"Unauthorized"});
+    }
+});
+
 api.post('/getGrupo', async(req,res) => {
     var usuarioToken = req.body.usuarioToken;
 
