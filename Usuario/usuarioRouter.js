@@ -41,23 +41,28 @@ api.post('/doLogin', (req,res) => {
 	}
 });
 
-api.post('/registro', (req,res) => {
+api.post('/registro', async(req,res) => {
     var email = req.body.email;
     var pass = req.body.pass;
     if(proxy.isUserAuthenticated(req.headers['authtoken'])){
         if (proxy.allValuesNeeded([email,pass])){
             const Usuario = mongoose.model('Usuario', databaseConfig.usuarioSchema);
-            const nuevoUsuario = new Usuario({ 
-                email: email,
-                pass: pass,
-                token: randomToken(16)
-            });
-            nuevoUsuario.save().then(usuario => {
-                res.status(200).json({usuario});
-            })
-            .catch(err => {
-                res.status(500).json({"reason":"Error interno, vuelva a intentarlo"});
-            });
+            const emailRepetido = await Usuario.find({email: email});
+            if (emailRepetido.length > 0) {
+                res.status(400).json({"reason":"Este email ya está asociado a una cuenta"});
+            } else {
+                const nuevoUsuario = new Usuario({ 
+                    email: email,
+                    pass: pass,
+                    token: randomToken(16)
+                });
+                nuevoUsuario.save().then(usuario => {
+                    res.status(200).json({usuario});
+                })
+                .catch(err => {
+                    res.status(500).json({"reason":"Error interno, vuelva a intentarlo"});
+                });
+            }
         } else {
             res.status(400).json({"reason":"Faltan valores en la llamada"});
         }
