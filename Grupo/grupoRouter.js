@@ -41,6 +41,7 @@ api.post('/crearGrupo', async(req,res) => {
                     "token": grupoCreado.token,
                     "nombre": grupoCreado.nombre,
                     "ahorro": grupoCreado.ahorro,
+                    "periodoActivo": grupoCreado.periodoActivo,
                     "miembros": miembros,
                     "categorias": categorias
                 }
@@ -68,19 +69,19 @@ api.post('/unirGrupo', async(req,res) => {
             try{
                 const Grupo = mongoose.model('Grupo', databaseConfig.grupoSchema);
                 const Usuario = mongoose.model('Usuario', databaseConfig.usuarioSchema);
+
                 const grupoParaAnadir = await Grupo.findOne({token: grupoToken});
-                
-                const usuarioParaUnir = await Usuario.findOne({token: usuarioToken})
+                const usuarioParaUnir = await Usuario.findOne({token: usuarioToken});
                 usuarioParaUnir.grupo = grupoToken;
                 const usuarioUnido = await usuarioParaUnir.save();
 
-                const miembros = await Usuario.find({grupo: grupoUsuario.token});
-                const categorias = await Categoria.find({grupo: grupoUsuario.token});
-
+                const miembros = await Usuario.find({grupo: grupoParaAnadir.token});
+                const categorias = await Categoria.find({grupo: grupoParaAnadir.token});
                 var grupo = {
                     "token": grupoParaAnadir.token,
                     "nombre": grupoParaAnadir.nombre,
                     "ahorro": grupoParaAnadir.ahorro,
+                    "periodoActivo": grupoParaAnadir.periodoActivo,
                     "miembros": miembros,
                     "categorias": categorias
                 }
@@ -89,6 +90,7 @@ api.post('/unirGrupo', async(req,res) => {
                 res.status(200).json({grupo});
                 
             } catch(err) {
+                console.log(err);
 				res.status(400).json({"reason":"Este ID no corresponde a ningún grupo"});
 			};
         } else {
@@ -119,6 +121,7 @@ api.post('/getGrupo', async(req,res) => {
                     "token": grupoUsuario.token,
                     "nombre": grupoUsuario.nombre,
                     "ahorro": grupoUsuario.ahorro,
+                    "periodoActivo": grupoUsuario.periodoActivo,
                     "miembros": miembros,
                     "categorias": categorias
                 }
@@ -151,7 +154,7 @@ api.post('/abandonarGrupo', async(req,res) => {
                 const usuario = await usuarioEditable.save();
 
                 res.status(200).json({usuario});
-                
+
             } catch(err) {
 				res.status(500).json({"reason":"Error interno, vuelva a intentarlo"});
 			};
