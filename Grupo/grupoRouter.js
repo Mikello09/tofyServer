@@ -69,6 +69,7 @@ api.post('/unirGrupo', async(req,res) => {
             try{
                 const Grupo = mongoose.model('Grupo', databaseConfig.grupoSchema);
                 const Usuario = mongoose.model('Usuario', databaseConfig.usuarioSchema);
+                const Categoria = mongoose.model('Categoria', databaseConfig.categoriaSchema);
 
                 const grupoParaAnadir = await Grupo.findOne({token: grupoToken});
                 const usuarioParaUnir = await Usuario.findOne({token: usuarioToken});
