@@ -27,7 +27,8 @@ const clavesSchema = new mongoose.Schema({
 const grupoSchema = new mongoose.Schema({
     token: String,
     nombre: String,
-    ahorro: String
+    ahorro: String,
+    periodoActivo: String
 });
 
 const categoriaSchema = new mongoose.Schema({

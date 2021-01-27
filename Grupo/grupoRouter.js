@@ -138,6 +138,32 @@ api.post('/getGrupo', async(req,res) => {
     }
 });
 
+api.post('/abandonarGrupo', async(req,res) => {
+    var usuarioToken = req.body.usuarioToken;
+
+    if(proxy.isUserAuthenticated(req.headers['authtoken'])){
+        if (proxy.allValuesNeeded([usuarioToken])){
+            try{
+                const Usuario = mongoose.model('Usuario', databaseConfig.usuarioSchema);
+                
+                const usuarioEditable = await Usuario.findOne({token: usuarioToken});
+                usuarioEditable.grupo = "";
+                const usuario = await usuarioEditable.save();
+
+                res.status(200).json({usuario});
+                
+            } catch(err) {
+				res.status(500).json({"reason":"Error interno, vuelva a intentarlo"});
+			};
+        } else {
+            res.status(400).json({"reason":"Faltan valores en la llamada"});
+        }
+
+    } else {
+        res.status(401).json({"reason":"Unauthorized"});
+    }
+});
+
 api.post('/addCategoria', async(req,res) => {
     var titulo = req.body.titulo;
     var imagen = req.body.imagen;
