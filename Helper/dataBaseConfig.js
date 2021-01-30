@@ -39,5 +39,25 @@ const categoriaSchema = new mongoose.Schema({
     tipo: String
 });
 
+const periodoSchema = new mongoose.Schema({
+    token: String,
+    titulo: String,
+    ahorroEstimado: String,
+    fechaInicio: String,
+    fechaFin: String,
+    grupo: String
+});
 
-module.exports = {usuarioSchema,clavesSchema, grupoSchema, categoriaSchema, uri}
+const movimientoSchema = new mongoose.Schema({
+    token: String,
+    descripcion: String,
+    valor: String,
+    categoria: String,
+    fecha: String,
+    tipo: String,
+    periodo: String,
+    grupo: String
+});
+
+
+module.exports = {usuarioSchema,clavesSchema, grupoSchema, categoriaSchema, periodoSchema, movimientoSchema, uri}

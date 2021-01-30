@@ -43,7 +43,8 @@ api.post('/crearGrupo', async(req,res) => {
                     "ahorro": grupoCreado.ahorro,
                     "periodoActivo": grupoCreado.periodoActivo,
                     "miembros": miembros,
-                    "categorias": categorias
+                    "categorias": categorias,
+                    "periodos": []
                 }
 
                 res.status(200).json({grupo});
@@ -70,6 +71,8 @@ api.post('/unirGrupo', async(req,res) => {
                 const Grupo = mongoose.model('Grupo', databaseConfig.grupoSchema);
                 const Usuario = mongoose.model('Usuario', databaseConfig.usuarioSchema);
                 const Categoria = mongoose.model('Categoria', databaseConfig.categoriaSchema);
+                const Periodo = mongoose.model('Periodo', databaseConfig.periodoSchema);
+                const Movmiento = mongoose.model('Movimiento', databaseConfig.movimientoSchema);
 
                 const grupoParaAnadir = await Grupo.findOne({token: grupoToken});
                 const usuarioParaUnir = await Usuario.findOne({token: usuarioToken});
@@ -78,13 +81,43 @@ api.post('/unirGrupo', async(req,res) => {
 
                 const miembros = await Usuario.find({grupo: grupoParaAnadir.token});
                 const categorias = await Categoria.find({grupo: grupoParaAnadir.token});
+
+                var periodos = []
+                const periodosGrupo = await Periodo.find({grupo: grupoUsuario.token});
+                for(var i=0;i<periodosGrupo.length;i++){
+                    var movimientos = []
+                    const movimiento = await Movmiento.find({periodo: periodosGrupo[i].token});
+                    for(var j=0;j<movimiento.length;j++){
+                        const categoria = await Categoria.findOne({token: movimiento[j].categoria});
+                        movimientos.push({
+                            "token":movimiento[j].token,
+                            "descripcion":movimiento[j].descripcion,
+                            "valor":movimiento[j].valor,
+                            "categoria":categoria,
+                            "fecha":movimiento[j].fecha,
+                            "tipo":movimiento[j].tipo,
+                            "periodo":movimiento[j].periodo,
+                            "grupo":movimiento[j].grupo
+                        });
+                    }
+                    periodos.push({
+                        "token":periodosGrupo[i].token,
+                        "ahorroEstimado":periodosGrupo[i].ahorroEstimado,
+                        "fechaInicio": periodosGrupo[i].fechaInicio,
+                        "fechaFin":periodosGrupo[i].fechaFin,
+                        "movimientos": movimientos
+                    });
+                }
+
+
                 var grupo = {
                     "token": grupoParaAnadir.token,
                     "nombre": grupoParaAnadir.nombre,
                     "ahorro": grupoParaAnadir.ahorro,
                     "periodoActivo": grupoParaAnadir.periodoActivo,
                     "miembros": miembros,
-                    "categorias": categorias
+                    "categorias": categorias,
+                    "periodos": periodos
                 }
 
 
@@ -112,11 +145,42 @@ api.post('/getGrupo', async(req,res) => {
                 const Grupo = mongoose.model('Grupo', databaseConfig.grupoSchema);
                 const Usuario = mongoose.model('Usuario', databaseConfig.usuarioSchema);
                 const Categoria = mongoose.model('Categoria', databaseConfig.categoriaSchema);
+                const Periodo = mongoose.model('Periodo', databaseConfig.periodoSchema);
+                const Movmiento = mongoose.model('Movimiento', databaseConfig.movimientoSchema);
                 
                 const usuario = await Usuario.findOne({token: usuarioToken});
                 const grupoUsuario = await Grupo.findOne({token: usuario.grupo});
                 const miembros = await Usuario.find({grupo: grupoUsuario.token});
                 const categorias = await Categoria.find({grupo: grupoUsuario.token});
+
+
+                var periodos = []
+                const periodosGrupo = await Periodo.find({grupo: grupoUsuario.token});
+                for(var i=0;i<periodosGrupo.length;i++){
+                    var movimientos = []
+                    const movimiento = await Movmiento.find({periodo: periodosGrupo[i].token});
+                    for(var j=0;j<movimiento.length;j++){
+                        const categoria = await Categoria.findOne({token: movimiento[j].categoria});
+                        movimientos.push({
+                            "token":movimiento[j].token,
+                            "descripcion":movimiento[j].descripcion,
+                            "valor":movimiento[j].valor,
+                            "categoria":categoria,
+                            "fecha":movimiento[j].fecha,
+                            "tipo":movimiento[j].tipo,
+                            "periodo":movimiento[j].periodo,
+                            "grupo":movimiento[j].grupo
+                        });
+                    }
+                    periodos.push({
+                        "token":periodosGrupo[i].token,
+                        "ahorroEstimado":periodosGrupo[i].ahorroEstimado,
+                        "fechaInicio": periodosGrupo[i].fechaInicio,
+                        "fechaFin":periodosGrupo[i].fechaFin,
+                        "movimientos": movimientos
+                    });
+                }
+
 
                 var grupo = {
                     "token": grupoUsuario.token,
@@ -124,13 +188,15 @@ api.post('/getGrupo', async(req,res) => {
                     "ahorro": grupoUsuario.ahorro,
                     "periodoActivo": grupoUsuario.periodoActivo,
                     "miembros": miembros,
-                    "categorias": categorias
+                    "categorias": categorias,
+                    "periodos": periodos
                 }
 
                 res.status(200).json({grupo});
 
                 
             } catch(err) {
+                console.log(err);
 				res.status(500).json({"reason":"Error interno, vuelva a intentarlo"});
 			};
         } else {
