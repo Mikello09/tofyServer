@@ -105,6 +105,7 @@ api.post('/unirGrupo', async(req,res) => {
                         "ahorroEstimado":periodosGrupo[i].ahorroEstimado,
                         "fechaInicio": periodosGrupo[i].fechaInicio,
                         "fechaFin":periodosGrupo[i].fechaFin,
+                        "ahorroFinal":periodosGrupo[i].ahorroFinal,
                         "movimientos": movimientos
                     });
                 }
@@ -177,6 +178,7 @@ api.post('/getGrupo', async(req,res) => {
                         "ahorroEstimado":periodosGrupo[i].ahorroEstimado,
                         "fechaInicio": periodosGrupo[i].fechaInicio,
                         "fechaFin":periodosGrupo[i].fechaFin,
+                        "ahorroFinal":periodosGrupo[i].ahorroFinal,
                         "movimientos": movimientos
                     });
                 }

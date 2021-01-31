@@ -32,6 +32,7 @@ api.post('/crearPeriodo', async(req,res) => {
                     ahorroEstimado: ahorroEstimado,
                     fechaInicio: fechaInicio,
                     fechaFin: "",
+                    ahorroFinal: "",
                     grupo: grupo
                 });
                 const periodoEditado = await nuevoPeriodo.save();
@@ -46,6 +47,7 @@ api.post('/crearPeriodo', async(req,res) => {
                     "ahorroEstimado": periodoEditado.ahorroEstimado,
                     "fechaInicio": periodoEditado.fechaInicio,
                     "fechaFin": periodoEditado.fechaFin,
+                    "ahorroFinal": periodoEditado.ahorroFinal,
                     "movimientos": []
                 }
 
@@ -68,15 +70,17 @@ api.post('/finalizarPeriodo', async(req,res) => {
     var periodoToken = req.body.periodoToken;
     var grupo = req.body.grupo;
     var fechaFin = req.body.fechaFin;
+    var ahorroFinal = req.body.ahorroFinal;
 
     if(proxy.isUserAuthenticated(req.headers['authtoken'])){
-        if (proxy.allValuesNeeded([periodoToken, grupo, fechaFin])){
+        if (proxy.allValuesNeeded([periodoToken, grupo, fechaFin, ahorroFinal])){
             try{
                 const Grupo = mongoose.model('Grupo', databaseConfig.grupoSchema);
                 const Periodo = mongoose.model('Periodo', databaseConfig.periodoSchema);
 
                 const periodoAEdtiar = await Periodo.findOne({token: periodoToken});
                 periodoAEdtiar.fechaFin = fechaFin;
+                periodoAEdtiar.ahorroFinal = ahorroFinal;
                 const periodoEditado = await periodoAEdtiar.save();
 
                 const grupoAEditar = await Grupo.findOne({token: grupo});
@@ -89,6 +93,7 @@ api.post('/finalizarPeriodo', async(req,res) => {
                     "ahorroEstimado": periodoEditado.ahorroEstimado,
                     "fechaInicio": periodoEditado.fechaInicio,
                     "fechaFin": periodoEditado.fechaFin,
+                    "ahorroFinal": periodoEditado.ahorroFinal,
                     "movimientos": []
                 }
 

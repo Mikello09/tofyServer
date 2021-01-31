@@ -45,6 +45,7 @@ const periodoSchema = new mongoose.Schema({
     ahorroEstimado: String,
     fechaInicio: String,
     fechaFin: String,
+    ahorroFinal: String,
     grupo: String
 });
 
