@@ -102,6 +102,7 @@ api.post('/unirGrupo', async(req,res) => {
                     }
                     periodos.push({
                         "token":periodosGrupo[i].token,
+                        "titulo":periodosGrupo[i].titulo,
                         "ahorroEstimado":periodosGrupo[i].ahorroEstimado,
                         "fechaInicio": periodosGrupo[i].fechaInicio,
                         "fechaFin":periodosGrupo[i].fechaFin,
@@ -175,6 +176,7 @@ api.post('/getGrupo', async(req,res) => {
                     }
                     periodos.push({
                         "token":periodosGrupo[i].token,
+                        "titulo":periodosGrupo[i].titulo,
                         "ahorroEstimado":periodosGrupo[i].ahorroEstimado,
                         "fechaInicio": periodosGrupo[i].fechaInicio,
                         "fechaFin":periodosGrupo[i].fechaFin,
