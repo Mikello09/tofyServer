@@ -11,6 +11,7 @@ const usuarioSchema = new mongoose.Schema({
     pass: String,
     token: String,
     nombre: String,
+    character: String,
     grupo: String
 }); 
 

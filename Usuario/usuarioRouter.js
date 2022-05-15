@@ -44,6 +44,8 @@ api.post('/doLogin', (req,res) => {
 api.post('/registro', async(req,res) => {
     var email = req.body.email;
     var pass = req.body.pass;
+    var name = req.body.name;
+    var character = req.body.character;
     if(proxy.isUserAuthenticated(req.headers['authtoken'])){
         if (proxy.allValuesNeeded([email,pass])){
             const Usuario = mongoose.model('Usuario', databaseConfig.usuarioSchema);
@@ -54,6 +56,8 @@ api.post('/registro', async(req,res) => {
                 const nuevoUsuario = new Usuario({ 
                     email: email,
                     pass: pass,
+                    nombre: nombre,
+                    character: character,
                     token: randomToken(16)
                 });
                 nuevoUsuario.save().then(usuario => {
