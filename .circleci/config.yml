@@ -1,14 +1,8 @@
 version: 2.1
-orbs:
-  heroku: circleci/heroku@1.2.6
-parameters:
-  branch:
-    type: string
-    default: master
-  app-name: 
-    type: string
-    default: tranquil-temple-40140
+jobs:
+  build:
+    run: git push heroku master
 workflows:
   heroku_deploy:
     jobs:
-      - heroku/deploy-via-git
+      - build
