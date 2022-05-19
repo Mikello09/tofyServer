@@ -1,9 +1,10 @@
 version: 2.1
 orbs:
   heroku: circleci/heroku@1.2.6
+parameters:
+  branch: master
+  app-name: tranquil-temple-40140
 workflows:
   heroku_deploy:
     jobs:
-      - heroku/deploy-via-git:
-        branch: master
-        app-name: tranquil-temple-40140
+      - heroku/deploy-via-git
