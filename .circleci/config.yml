@@ -1,8 +1,10 @@
 version: 2.1
 orbs:
   heroku: circleci/heroku@1.2.6
+  node: circleci/node@3.0.1
 jobs:
   build:
+    executor: node/default
     steps:
       - run: git push heroku master
 workflows:
