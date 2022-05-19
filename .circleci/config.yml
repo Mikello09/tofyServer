@@ -5,7 +5,9 @@ parameters:
   branch:
     type: string
     default: master
-  app-name: tranquil-temple-40140
+  app-name: 
+    type: string
+    default: tranquil-temple-40140
 workflows:
   heroku_deploy:
     jobs:
