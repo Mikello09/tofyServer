@@ -56,7 +56,7 @@ api.post('/registro', async(req,res) => {
                 const nuevoUsuario = new Usuario({ 
                     email: email,
                     pass: pass,
-                    nombre: nombre,
+                    nombre: name,
                     character: character,
                     token: randomToken(16)
                 });
@@ -67,6 +67,31 @@ api.post('/registro', async(req,res) => {
                     res.status(500).json({"reason":"Error interno, vuelva a intentarlo"});
                 });
             }
+        } else {
+            res.status(400).json({"reason":"Faltan valores en la llamada"});
+        }
+    } else {
+        res.status(401).json({"reason":"Unauthorized"});
+    }
+});
+
+api.post('/getUser', async(req,res) => {
+    var userToken = req.body.userToken;
+    if(proxy.isUserAuthenticated(req.headers['authtoken'])){
+        if(proxy.allValuesNeeded([userToken])){
+            const Usuario = mongoose.model('Usuario', databaseConfig.usuarioSchema);
+            Usuario.findOne({
+                token: usuarioToken,
+            }, function(err, usuario){  
+                if(usuario != null){
+                    res.status(200).json({usuario});
+                } else {
+                    res.status(400).json({"reason":"No se ha encontrado ningun usuario"});
+                }
+            })
+            .catch(err => {
+                res.status(500).json({"reason":"Error interno, vuelva a intentarlo"});
+            });
         } else {
             res.status(400).json({"reason":"Faltan valores en la llamada"});
         }
