@@ -76,9 +76,9 @@ api.post('/registro', async(req,res) => {
 });
 
 api.post('/getUser', async(req,res) => {
-    var userToken = req.body.userToken;
+    var usuarioToken = req.body.userToken;
     if(proxy.isUserAuthenticated(req.headers['authtoken'])){
-        if(proxy.allValuesNeeded([userToken])){
+        if(proxy.allValuesNeeded([usuarioToken])){
             const Usuario = mongoose.model('Usuario', databaseConfig.usuarioSchema);
             Usuario.findOne({
                 token: usuarioToken,
