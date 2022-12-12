@@ -6,5 +6,5 @@ const PORT = process.env.PORT || 3000
 mongoose.connect(databaseConfig.uri, {useNewUrlParser: true, useUnifiedTopology: true})
 
 server.listen(PORT, '0.0.0.0', () => {
-    console.log('listening to server hello');
+    console.log('listening to server');
 });
